@@ -61,10 +61,11 @@ class HintingCacheTestCase(unittest.TestCase):
         num = random.randint(2, 6)
         hint_keys = ['hint_key:%i' % random.randint(100,300) for i in range(num)]
         key = 'key:%i' % random.randint(100,300)
-        value = 'val:%i' % random.randint(100,300)
+        values = ['val:%i' % random.randint(100,300) for i in range(num + 1)]
+        result = dict(zip(hint_keys + [key], values))
         self.cache.hint(*hint_keys)
-        self.inner_cache.expects('get_many').with_args(hint_keys + [key]).returns(value)
-        self.assertEqual(value, self.cache.get(key))
+        self.inner_cache.expects('get_many').with_args(matching(hint_keys + [key])).returns(result)
+        self.assertEqual(result[key], self.cache.get(key))
         
     def test_multi_hint_get_many(self):
         num = random.randint(2, 6)
