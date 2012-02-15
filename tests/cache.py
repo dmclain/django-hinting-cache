@@ -2,7 +2,7 @@ import unittest
 import fudge
 import random
 
-from ..django_hinting_cache.cache import HintingCache
+from django_hinting_cache.cache import HintingCache
 
 class HintingCacheTestCase(unittest.TestCase):
 
