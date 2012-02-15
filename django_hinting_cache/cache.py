@@ -1,6 +1,6 @@
 
 class HintingCache(object):
-    def __init__(self, cache)
+    def __init__(self, cache):
         self.cache = cache
     
     def get(self, key, *args, **kwargs):
