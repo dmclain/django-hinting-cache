@@ -90,7 +90,27 @@ class HintingCacheTestCase(unittest.TestCase):
         
     def test_hint_get_get_with_matching_key(self):
         pass
-        
+
+    def test_proxying_set(self):
+        self.inner_cache.expects('__getattr__').with_args('set').returns_fake(callable=True)
+        self.cache.set()
+
+    def test_proxying_set_many(self):
+        self.inner_cache.expects('__getattr__').with_args('set_many').returns_fake(callable=True)
+        self.cache.set_many()
+
+    def test_proxying_delete(self):
+        self.inner_cache.expects('__getattr__').with_args('delete').returns_fake(callable=True)
+        self.cache.delete()
+
+    def test_proxying_delete_many(self):
+        self.inner_cache.expects('__getattr__').with_args('delete_many').returns_fake(callable=True)
+        self.cache.delete_many()
+
+    def test_proxying_has_key(self):
+        self.inner_cache.expects('__getattr__').with_args('has_key').returns_fake(callable=True)
+        self.cache.has_key()
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -31,3 +31,6 @@ class HintingCache(object):
     
     def hint(self, *keys):
         self._hints = self._hints.union(keys)
+
+    def __getattr__(self, name ):
+        return self.cache.__getattr__(name)
