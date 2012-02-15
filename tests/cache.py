@@ -88,11 +88,11 @@ class HintingCacheTestCase(unittest.TestCase):
         self.inner_cache.expects('get_many').with_args(matching(hint_keys + keys)).returns(result)
         self.assertEqual(result, self.cache.get_many(keys))
         
-    def test_multi_hint_get_many_with_overlap(self):
-        pass
+    #def test_multi_hint_get_many_with_overlap(self):
+        #pass
         
-    def test_hint_get_get_with_matching_key(self):
-        pass
+    #def test_hint_get_get_with_matching_key(self):
+        #pass
 
     def test_proxying_set(self):
         self.inner_cache.expects('__getattr__').with_args('set').returns_fake(callable=True)
