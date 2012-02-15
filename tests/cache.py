@@ -7,10 +7,7 @@ from fudge.inspector import arg
 
 def matching(bound):
     def inner(inner_set):
-        for obj in inner_set:
-            if not obj in bound:
-                return False
-        return True
+        return set(inner_set) == set(bound)
     return arg.passes_test(inner)
 
 class HintingCacheTestCase(unittest.TestCase):
