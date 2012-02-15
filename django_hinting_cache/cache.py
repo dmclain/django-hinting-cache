@@ -19,11 +19,12 @@ class HintingCache(object):
             if k in self._hints:
                 self.fetched[k] = v
         self._hints = set()
+        return result
     
     def get(self, key, *args, **kwargs):
         if key in self.fetched:
             return self.fetched[key]
-        return self._get_with_hints([key], *args, **kwargs)
+        return self._get_with_hints([key], *args, **kwargs)[key]
 
     def get_many(self, keys, *args, **kwargs):
         return self._get_with_hints(keys, *args, **kwargs)
