@@ -71,22 +71,22 @@ class HintingCacheTestCase(unittest.TestCase):
         num = random.randint(2, 6)
         hint_keys = ['hint_key:%i' % random.randint(100,300) for i in range(num)]
         keys = ['key:%i' % random.randint(100,300) for i in range(num)]
-        value = 'val:%i' % random.randint(100,300)
+        values = ['val:%i' % random.randint(100,300) for i in range(num * 2)]
         result = dict(zip(hint_keys + keys, values))
         self.cache.hint(*hint_keys)
-        self.inner_cache.expects('get_many').with_args(matching(hint_keys + keys)).returns(value)
-        self.assertEqual(value, self.cache.get_many(keys))
+        self.inner_cache.expects('get_many').with_args(matching(hint_keys + keys)).returns(result)
+        self.assertEqual(result, self.cache.get_many(keys))
         
     def test_multi_hint_get_with_same_key(self):
         num = random.randint(2, 6)
         hint_keys = ['hint_key:%i' % random.randint(100,300) for i in range(num)]
         keys = ['key:%i' % random.randint(100,300) for i in range(num)]
-        keys = keys + [hint_keys[0]]
-        value = 'val:%i' % random.randint(100,300)
+        values = ['val:%i' % random.randint(100,300) for i in range(num * 2)]
         result = dict(zip(hint_keys + keys, values))
+        keys = keys + [hint_keys[0]]
         self.cache.hint(*hint_keys)
-        self.inner_cache.expects('get_many').with_args(matching(hint_keys + keys)).returns(value)
-        self.assertEqual(value, self.cache.get_many(keys))
+        self.inner_cache.expects('get_many').with_args(matching(hint_keys + keys)).returns(result)
+        self.assertEqual(result, self.cache.get_many(keys))
         
     def test_multi_hint_get_many_with_overlap(self):
         pass
