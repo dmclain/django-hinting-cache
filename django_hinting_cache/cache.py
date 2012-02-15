@@ -6,11 +6,11 @@ class HintingCache(object):
         self.fetched = {}
     
     def _get_with_hints(self, keys, *args, **kwargs):
-        keys = keys + list(self._hints)
+        keys = list(self._hints.union(keys))
         if len(keys) == 1:
-            result = self.cache.get(keys[0], *args, **kwargs)
-            if result:
-                result = {keys[0]: result}
+            tmp = self.cache.get(keys[0], *args, **kwargs)
+            if tmp is not None:
+                result = {keys[0]: tmp}
             else:
                 result = {}
         else:
