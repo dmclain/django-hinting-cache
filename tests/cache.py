@@ -49,6 +49,23 @@ class HintingCacheTestCase(unittest.TestCase):
         self.inner_cache.expects('get_many').with_args(matching([hint_key] + keys)).returns(value)
         self.assertEqual(value, self.cache.get_many(keys))
         
+    def test_single_hint_get_miss(self):
+        hint_key = 'hint_key:%i' % random.randint(100,300)
+        key = 'key:%i' % random.randint(100,300)
+        self.cache.hint(hint_key)
+        self.inner_cache.expects('get_many').with_args(matching([hint_key, key])).returns({})
+        self.assertEqual(None, self.cache.get(key))
+        
+    def test_single_hint_get_many_miss(self):
+        num = random.randint(2, 7)
+        hint_key = 'hint_key:%i' % random.randint(100,300)
+        keys = ['key:%i' % random.randint(100,300) for i in range(num)]
+        values = ['val:%i' % random.randint(100,300) for i in range(num)]
+        self.cache.hint(hint_key)
+        value = dict(zip(keys, values))
+        self.inner_cache.expects('get_many').with_args(matching([hint_key] + keys)).returns({})
+        self.assertEqual({}, self.cache.get_many(keys))
+        
     def test_single_hint_get_with_same_key(self):
         hint_key = 'hint_key:%i' % random.randint(100,300)
         key = hint_key
