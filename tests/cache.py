@@ -14,7 +14,8 @@ class HintingCacheTestCase(unittest.TestCase):
 
     def setUp(self):
         self.inner_cache = fudge.Fake()
-        self.cache = HintingCache(self.inner_cache)
+        self.cache = HintingCache('location', {})
+        self.cache.cache = self.inner_cache
 
     def test_no_hint_get(self):
         key = 'key:%i' % random.randint(100,300)
