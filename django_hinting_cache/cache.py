@@ -42,4 +42,4 @@ class HintingCache(object):
         self.hints = self.hints.union(keys)
 
     def __getattr__(self, name ):
-        return self.get_cache.__getattr__(name)
+        return getattr(self.get_cache, name)
