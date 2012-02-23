@@ -1,4 +1,4 @@
-import unittest
+from django.test import TestCase
 import fudge
 import random
 
@@ -10,7 +10,7 @@ def matching(bound):
         return set(inner_set) == set(bound)
     return arg.passes_test(inner)
 
-class HintingCacheTestCase(unittest.TestCase):
+class HintingCacheTestCase(TestCase):
 
     def setUp(self):
         self.inner_cache = fudge.Fake()
@@ -131,7 +131,3 @@ class HintingCacheTestCase(unittest.TestCase):
     def test_proxying_has_key(self):
         self.inner_cache.expects('__getattr__').with_args('has_key').returns_fake(callable=True)
         self.cache.has_key()
-
-
-if __name__ == '__main__':
-    unittest.main()

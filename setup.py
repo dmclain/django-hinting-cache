@@ -15,5 +15,5 @@ setup(
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP',
     ],
-    packages=['django_hinting_cache'],
+    packages=['django_hinting_cache', 'django_hinting_cache.template_tags', 'django_hinting_cache.tests'],
 )
