@@ -4,14 +4,16 @@ import random
 
 from django_hinting_cache.cache import HintingCache
 from fudge.inspector import arg
+from django.core.cache import get_cache
+
 
 def matching(bound):
     def inner(inner_set):
         return set(inner_set) == set(bound)
     return arg.passes_test(inner)
 
-class HintingCacheTestCase(TestCase):
 
+class HintingCacheTestCase(TestCase):
     def setUp(self):
         self.inner_cache = fudge.Fake()
         self.cache = HintingCache('location', {})
@@ -113,21 +115,30 @@ class HintingCacheTestCase(TestCase):
         #pass
 
     def test_proxying_set(self):
-        self.inner_cache.expects('__getattr__').with_args('set').returns_fake(callable=True)
+        self.inner_cache.expects('set').returns_fake(callable=True)
         self.cache.set()
 
     def test_proxying_set_many(self):
-        self.inner_cache.expects('__getattr__').with_args('set_many').returns_fake(callable=True)
+        self.inner_cache.expects('set_many').returns_fake(callable=True)
         self.cache.set_many()
 
     def test_proxying_delete(self):
-        self.inner_cache.expects('__getattr__').with_args('delete').returns_fake(callable=True)
+        self.inner_cache.expects('delete').returns_fake(callable=True)
         self.cache.delete()
 
     def test_proxying_delete_many(self):
-        self.inner_cache.expects('__getattr__').with_args('delete_many').returns_fake(callable=True)
+        self.inner_cache.expects('delete_many').returns_fake(callable=True)
         self.cache.delete_many()
 
     def test_proxying_has_key(self):
-        self.inner_cache.expects('__getattr__').with_args('has_key').returns_fake(callable=True)
+        self.inner_cache.expects('has_key').returns_fake(callable=True)
         self.cache.has_key()
+
+
+class HintingCacheInstantiationTestCase(TestCase):
+    def testInstantiation(self):
+        hinting = get_cache('default')
+        inner = get_cache('real')
+        hinting.set('key', 'value', 60)
+        self.assertEqual(hinting.get('key'), 'value')
+        self.assertEqual(inner.get('key'), 'value')
