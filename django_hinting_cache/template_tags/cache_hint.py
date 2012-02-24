@@ -1,8 +1,7 @@
 import hashlib
-from django.template import Library, Node, TemplateSyntaxError, Variable, VariableDoesNotExist
+from django.template import Library, Node
 from django.template import resolve_variable
 from django.core.cache import cache
-from django.utils.encoding import force_unicode
 from django.utils.http import urlquote
 
 register = Library()
@@ -13,14 +12,14 @@ def get_cache_key(fragment_name, vary_on, context):
     return 'template.cache.%s.%s' % (fragment_name, args.hexdigest())
 
 
-class CacheHintNode(template.Node):
+class CacheHintNode(Node):
     def __init__(self, fragment_name, vary_on):
-    	self.fragment_name = fragment_name
-    	self.vary_on = vary_on
+        self.fragment_name = fragment_name
+        self.vary_on = vary_on
 
     def render(self, context):
-    	cache.hint(get_cache_key(self.fragment_name, self.vary_on, context))
-    	return ''
+        cache.hint(get_cache_key(self.fragment_name, self.vary_on, context))
+        return ''
 
 
 @register.tag
@@ -29,14 +28,14 @@ def cache_hint(parser, token):
     return CacheHintNode(tokens[1], tokens[2:])
 
 
-class CacheHintMultiNode(template.Node):
+class CacheHintMultiNode(Node):
     def __init__(self, fragment_names):
-    	self.fragment_names = fragment_names
+        self.fragment_names = fragment_names
 
     def render(self, context):
-    	for fragment_name in self.fragment_names:
-	    	cache.hint(get_cache_key(fragment_name, [], context)
-    	return ''
+        for fragment_name in self.fragment_names:
+            cache.hint(get_cache_key(fragment_name, [], context))
+        return ''
 
 
 @register.tag
