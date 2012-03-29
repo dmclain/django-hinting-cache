@@ -27,13 +27,11 @@ class HintingCache(object):
         for k, v in result.items():
             if k in self.hints:
                 self.fetched[k] = v
-                print 'saving: %s' % k
         self.hints = set()
         return result
     
     def get(self, key, default=None, version=None):
         if key in self.fetched:
-            print 'prefetched: %s' % key
             return self.fetched[key]
         return self._get_with_hints([key]).get(key, default)
 
