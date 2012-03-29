@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='django-hinting-cache',
-    version='0.2',
+    version='0.2.alpha',
     description='Cache wrapper that turns many gets into fewer get_many\'s',
     author='Dave McLain',
     author_email='python@davemclain.com',
