@@ -14,29 +14,31 @@ class HintingCache(object):
             self.cache = get_cache(self.location)
         return self.cache
     
-    def _get_with_hints(self, keys, *args, **kwargs):
+    def _get_with_hints(self, keys):
         keys = list(self.hints.union(keys))
         if len(keys) == 1:
-            tmp = self.get_cache.get(keys[0], *args, **kwargs)
+            tmp = self.get_cache.get(keys[0])
             if tmp is not None:
                 result = {keys[0]: tmp}
             else:
                 result = {}
         else:
-            result = self.get_cache.get_many(keys, *args, **kwargs)
+            result = self.get_cache.get_many(keys)
         for k, v in result.items():
             if k in self.hints:
                 self.fetched[k] = v
+                print 'saving: %s' % k
         self.hints = set()
         return result
     
-    def get(self, key, *args, **kwargs):
+    def get(self, key, default=None, version=None):
         if key in self.fetched:
+            print 'prefetched: %s' % key
             return self.fetched[key]
-        return self._get_with_hints([key], *args, **kwargs).get(key, None)
+        return self._get_with_hints([key]).get(key, default)
 
-    def get_many(self, keys, *args, **kwargs):
-        return self._get_with_hints(keys, *args, **kwargs)
+    def get_many(self, keys, version=None):
+        return self._get_with_hints(keys, version=version)
     
     def hint(self, *keys):
         self.hints = self.hints.union(keys)
